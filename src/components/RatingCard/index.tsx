@@ -4,8 +4,8 @@ import { Book, Rating, User } from '@prisma/client'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Text } from '../Typography'
 import { getRelativeTimeString } from '@/utils/get-relative-time-string'
-import Image from 'next/image'
 import { RatingStars } from './RatingStars'
+import { BookDetails } from './BookDetails'
 
 export interface RatingWithAuthorAndBook extends Rating {
     user: User
@@ -20,8 +20,8 @@ export const RatingCard = ({ rating }: RatingCardProps) => {
     const distance = getRelativeTimeString(new Date(rating.created_at), 'pt-BR')
 
     return (
-        <Card className="w-full bg-gray-700">
-            <CardHeader className="mb-8 w-full">
+        <Card className="w-full border-none bg-gray-700">
+            <CardHeader className="mb-4 w-full">
                 <section className="flex items-center gap-4">
                     <Link href={`/profile/${rating.user.id}`}>
                         <Avatar>
@@ -44,26 +44,7 @@ export const RatingCard = ({ rating }: RatingCardProps) => {
             </CardHeader>
 
             <CardContent className="flex gap-x-5">
-                <Image
-                    src={rating.book.cover_url}
-                    width={108}
-                    height={152}
-                    alt={rating.book.name}
-                    className="rounded-md"
-                />
-
-                <section className="flex flex-col gap-y-5">
-                    <div>
-                        <Text>{rating.book.name}</Text>
-                        <Text size="sm" color="gray400">
-                            {rating.book.author}
-                        </Text>
-                    </div>
-
-                    <Text size="sm" className="line-clamp-3">
-                        {rating.book.summary}
-                    </Text>
-                </section>
+                <BookDetails rating={rating} />
             </CardContent>
         </Card>
     )
