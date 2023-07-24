@@ -1,3 +1,7 @@
 export default function ExplorerPage() {
-    return <p>explorer</p>
+    return (
+        <section className="flex h-full w-full flex-col overflow-hidden">
+            explorer
+        </section>
+    )
 }

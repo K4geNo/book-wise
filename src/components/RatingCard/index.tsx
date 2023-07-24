@@ -25,9 +25,10 @@ export const RatingCard = ({ rating }: RatingCardProps) => {
                 <section className="flex items-center gap-4">
                     <Link href={`/profile/${rating.user.id}`}>
                         <Avatar>
-                            <AvatarImage src={rating.user.avatar_url ?? ''} />
+                            <AvatarImage src={rating.user.image ?? ''} />
                             <AvatarFallback>
-                                {rating.user.name[0].toUpperCase()}
+                                {rating.user.name &&
+                                    rating.user.name[0].toUpperCase()}
                             </AvatarFallback>
                         </Avatar>
                     </Link>
