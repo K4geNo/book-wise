@@ -2,41 +2,21 @@ import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-    const books = await prisma.book.findMany({
-        orderBy: {
-            ratings: {
-                _count: 'desc',
-            },
-        },
-        include: {
-            ratings: true,
-        },
-        take: 4,
-    })
-
-    const booksAvgRating = await prisma.rating.groupBy({
-        by: ['book_id'],
-        where: {
-            book_id: {
-                in: books.map((book) => book.id),
-            },
-        },
-        _avg: {
-            rate: true,
-        },
-    })
-
-    const bookWithAvgRating = books.map((book) => {
-        const bookAvgRating = booksAvgRating.find(
-            (avgRating) => avgRating.book_id === book.id,
+    const booksWithAvgRating = await prisma.$queryRaw`
+        SELECT b.*, AVG(r.rate) as avgRating
+        FROM books b
+        LEFT JOIN ratings r ON b.id = r.book_id
+        WHERE b.id IN (
+            SELECT b2.id
+            FROM books b2
+            LEFT JOIN ratings r2 ON b2.id = r2.book_id
+            GROUP BY b2.id
+            ORDER BY COUNT(r2.id) DESC
+            LIMIT 4
         )
-        const { ratings, ...bookInfo } = book
+        GROUP BY b.id
+        ORDER BY avgRating DESC;
+    `
 
-        return {
-            ...bookInfo,
-            avgRating: bookAvgRating?._avg?.rate,
-        }
-    })
-
-    return NextResponse.json({ books: bookWithAvgRating })
+    return NextResponse.json({ books: booksWithAvgRating })
 }
