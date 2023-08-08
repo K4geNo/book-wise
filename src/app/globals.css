@@ -81,4 +81,16 @@
   .scrollbar-hidden::-webkit-scrollbar {
     display: none;
   }
+
+  .scrollbar-modal::-webkit-scrollbar {
+    width: 0.375rem;
+  }
+
+  .scrollbar-modal::-webkit-scrollbar-track {
+    @apply bg-gray-700;
+  }
+
+  .scrollbar-modal::-webkit-scrollbar-thumb {
+    @apply bg-gray-600;
+  }
 }

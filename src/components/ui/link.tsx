@@ -1,10 +1,9 @@
-'use client'
-
-import { cn } from '@/utils/class-merge'
+import { PiCaretLeft, PiCaretRight } from 'react-icons/pi'
 import { VariantProps, cva } from 'class-variance-authority'
-import { useRouter } from 'next/navigation'
-import { ButtonHTMLAttributes } from 'react'
-import { PiCaretRight } from 'react-icons/pi'
+
+import { ComponentProps } from 'react'
+import NextLink from 'next/link'
+import { cn } from '@/utils/class-merge'
 
 export const nextLinkProps = cva(
     'flex items-center font-bold gap-2 py-2 px-3 rounded transition',
@@ -25,38 +24,56 @@ export const nextLinkProps = cva(
     },
 )
 
-type LinkProps = ButtonHTMLAttributes<HTMLButtonElement> &
+type LinkProps = ComponentProps<typeof NextLink> &
     VariantProps<typeof nextLinkProps> & {
         iconSide?: 'left' | 'right'
         color?: 'white' | 'purple'
         text: string
-        href?: string
-        onClick?: () => void
         withoutIcon?: boolean
     }
 
-export const Link = ({
+export function Link({
     iconSide = 'right',
     color,
     className,
     text,
-    href,
+    withoutIcon,
+    ...props
+}: LinkProps) {
+    return (
+        <NextLink
+            className={cn(nextLinkProps({ iconSide, color, className }))}
+            {...props}
+        >
+            {text}
+            {!withoutIcon &&
+                (iconSide === 'right' ? <PiCaretRight /> : <PiCaretLeft />)}
+        </NextLink>
+    )
+}
+
+type LinkButtonProps = ComponentProps<'button'> &
+    VariantProps<typeof nextLinkProps> & {
+        iconSide?: 'left' | 'right'
+        color?: 'white' | 'purple'
+        text: string
+        onClick?: () => void
+        withoutIcon?: boolean
+    }
+
+export function LinkButton({
+    iconSide = 'right',
+    color,
+    className,
+    text,
     onClick,
     withoutIcon,
     ...props
-}: LinkProps) => {
-    const router = useRouter()
-
-    const isHref = () => {
-        if (href) return router.push(href)
-
-        return onClick
-    }
-
+}: LinkButtonProps) {
     return (
         <button
             className={cn(nextLinkProps({ iconSide, color, className }))}
-            onClick={isHref}
+            onClick={onClick}
             {...props}
         >
             {text}

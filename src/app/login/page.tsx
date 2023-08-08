@@ -17,7 +17,7 @@ export default function LoginPage() {
                         </Text>
                     </div>
 
-                    <AuthButtons />
+                    <AuthButtons canGuest />
                 </div>
             </div>
         </section>

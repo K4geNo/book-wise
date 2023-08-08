@@ -22,7 +22,7 @@ export const PopularBooks = () => {
         <div className="mt-14 flex w-full flex-col gap-4">
             <header className="flex items-center justify-between">
                 <Text size="sm">Livros populares</Text>
-                <Link href="/explore" text="Ver todos" />
+                <Link href="/explorer" text="Ver todos" />
             </header>
 
             <section className="flex flex-col gap-3">
